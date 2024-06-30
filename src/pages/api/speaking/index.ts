@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { app } from "../../../lib/server";
+import { supabase, app } from "../../../lib/server";
 import { getFirestore } from "firebase-admin/firestore";
 
 
@@ -10,23 +10,20 @@ export const POST: APIRoute = async ({ request, redirect }) => {
   const testId = body.test_id;
   const part = body.part;
   const image1 = body.image1
-  const image2 = body.image2
 
   console.log(body)
+     
+  if(!q || !audio  || !testId || !part){
+      return new Response("Maydonlar to'ldirilishi shart", {status: 400})
+     }
 
     try {
-      const db = getFirestore(app);
-      const speakingRef = db.collection("speaking");
-      var datas = await speakingRef.add({
-        q,
-        audio,
-        test_id: testId,
-        part,
-        image1,
-        image2
-      });
+       
+      const { data, error } = await supabase
+      .from('part_1')
+      .insert({ image: image1, question: q, audio: audio, test_id: testId, part: part })
 
-      return new Response(JSON.stringify(datas));
+      return new Response(JSON.stringify(data));
 
     } catch (error) {
       return new Response("Something went wrong", {

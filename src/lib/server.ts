@@ -1,5 +1,6 @@
 import type { ServiceAccount } from "firebase-admin";
 import { initializeApp, cert, getApps } from "firebase-admin/app";
+import { createClient } from "@supabase/supabase-js";
 
 const activeApps = getApps();
 
@@ -22,5 +23,12 @@ const initApp = () => {
     credential: cert(serviceAccount as ServiceAccount)
   })
 }
+
+
+export const supabase = createClient(
+  'https://tmzegfpzmfjxjfyngbve.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRtemVnZnB6bWZqeGpmeW5nYnZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTAwOTAyNTgsImV4cCI6MjAyNTY2NjI1OH0.et4H-mtc9HUYu_w9fYckebmiOAVLZ2WmfD-viq26DNA',
+);
+
 
 export const app = activeApps.length === 0 ? initApp() : activeApps[0];
